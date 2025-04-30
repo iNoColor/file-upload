@@ -1,30 +1,44 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📁 อัปโหลดไฟล์</title>
+  <title>อัปโหลดไฟล์</title>
   <script>
     async function uploadFiles() {
       const files = document.getElementById("fileInput").files;
       const form = new FormData();
 
-      for (let file of files) {
-        form.append("file", file); // 👈 ใช้ชื่อ 'file' ซ้ำได้หลายไฟล์
+      // ตรวจสอบว่ามีไฟล์ที่เลือกหรือไม่
+      if (files.length === 0) {
+        alert("กรุณาเลือกไฟล์ก่อน");
+        return;
       }
 
-      const res = await fetch("https://script.google.com/macros/s/AKfycbzf06Ldum2x8mm4FbvTidZCc8oNz9Gn7yq2nkKv4GzC33rxiNesvgdl85SBaQSejAHX/exec", {
-        method: "POST",
-        body: form,
-      });
+      // เพิ่มไฟล์ใน formData
+      for (let file of files) {
+        form.append("files[]", file);
+      }
 
-      const result = await res.json();
-      alert("✅ อัปโหลดสำเร็จ:\n" + result.map(f => f.url).join("\n"));
+      try {
+        // ส่งข้อมูลไปยัง Google Apps Script
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzf06Ldum2x8mm4FbvTidZCc8oNz9Gn7yq2nkKv4GzC33rxiNesvgdl85SBaQSejAHX/exec", {
+          method: "POST",
+          body: form,
+        });
+
+        const json = await res.json();  // รับข้อมูล JSON จาก Google Apps Script
+        console.log(json);
+        alert("อัปโหลดสำเร็จ!");
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาด: ", error);
+        alert("การอัปโหลดไฟล์ล้มเหลว");
+      }
     }
   </script>
 </head>
-<body>
-  <h2>📤 อัปโหลดไฟล์ (หลายไฟล์)</h2>
+<body class="p-4 font-sans">
+  <h1>📁 อัปโหลดไฟล์ (หลายไฟล์)</h1>
   <input type="file" id="fileInput" multiple />
   <button onclick="uploadFiles()">อัปโหลด</button>
 </body>
