@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📁 อัปโหลดไฟล์</title>
+  <script>
+    async function uploadFiles() {
+      const files = document.getElementById("fileInput").files;
+      const form = new FormData();
+
+      for (let file of files) {
+        form.append("file", file); // 👈 ใช้ชื่อ 'file' ซ้ำได้หลายไฟล์
+      }
+
+      const res = await fetch("https://script.google.com/macros/s/AKfycbzf06Ldum2x8mm4FbvTidZCc8oNz9Gn7yq2nkKv4GzC33rxiNesvgdl85SBaQSejAHX/exec", {
+        method: "POST",
+        body: form,
+      });
+
+      const result = await res.json();
+      alert("✅ อัปโหลดสำเร็จ:\n" + result.map(f => f.url).join("\n"));
+    }
+  </script>
+</head>
+<body>
+  <h2>📤 อัปโหลดไฟล์ (หลายไฟล์)</h2>
+  <input type="file" id="fileInput" multiple />
+  <button onclick="uploadFiles()">อัปโหลด</button>
+</body>
+</html>
