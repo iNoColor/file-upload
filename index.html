@@ -29,7 +29,13 @@
 
         const json = await res.json();  // รับข้อมูล JSON จาก Google Apps Script
         console.log(json);
-        alert("อัปโหลดสำเร็จ!");
+
+        // หากได้รับข้อความ error จาก Google Apps Script
+        if (json.error) {
+          alert(json.error);  // แสดงข้อผิดพลาดจาก Google Apps Script
+        } else {
+          alert("อัปโหลดสำเร็จ!");
+        }
       } catch (error) {
         console.error("เกิดข้อผิดพลาด: ", error);
         alert("การอัปโหลดไฟล์ล้มเหลว");
